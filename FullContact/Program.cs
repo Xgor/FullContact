@@ -10,6 +10,8 @@ namespace FullContact
     {
         static void Main(string[] args)
         {
+            Console.Write("Enter E-mail: ");
+            string email =Console.ReadLine();
         }
     }
 }
