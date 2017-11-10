@@ -11,12 +11,21 @@ namespace FullContact
 {
     public interface IFullContactApi
     {
-        Task<FullContactPerson> 
+       Task<FullContactPerson> 
             LookupPersonByEmailAsync(string email);
-    }
+    }
 
-    public class FullContactPerson
+
+    public class FullContactPerson : IFullContactApi
     {
-        
+
+        public async Task<FullContactPerson> LookupPersonByEmailAsync(string email)
+        {
+            FullContactPerson person = new FullContactPerson();
+            await Task.Delay(5000);
+
+            return person;
+        }
+
     }
 }

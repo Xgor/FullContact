@@ -3,15 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Net.Http;
 namespace FullContact
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            Console.Write("Enter E-mail: ");
-            string email =Console.ReadLine();
+            Task t = MainAsync(args);
+            t.Wait();
         }
+
+        static async Task MainAsync(string[] args)
+        {
+            
+
+            Console.Write("Enter E-mail: ");
+            
+            string email = Console.ReadLine();
+            FullContactPerson person = new FullContactPerson();
+
+            Task<FullContactPerson> task = person.LookupPersonByEmailAsync(email);
+
+            Console.Write("Loading email: ");
+                
+            FullContactPerson p = await task;
+            Console.WriteLine("Mail Loaded!");
+            Console.ReadLine();
+        }
+
     }
 }
