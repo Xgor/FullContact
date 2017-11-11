@@ -26,10 +26,10 @@ namespace FullContact
 
             Task<FullContactPerson> task = person.LookupPersonByEmailAsync(email);
 
-            Console.Write("Loading email: ");
+            Console.WriteLine("Loading email... ");
                 
             FullContactPerson p = await task;
-            Console.WriteLine("Mail Loaded!");
+            
             Console.ReadLine();
         }
 
