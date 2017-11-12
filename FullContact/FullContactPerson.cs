@@ -35,23 +35,21 @@ namespace FullContact
     public class FullContactApi : IFullContactApi
     {
         Container container;
-
+        Person person;
+        string latestResult;
         public FullContactApi()
         {
             container = new Container();
-            #region Dependency Injection (DI) using Simple Injector
+            // Dependency Injection (DI) using Simple Injector
 
             container.RegisterSingleton<IServiceProvider>(container);
             container.Register<IFullContactAppServiceFactory, FullContactAppServiceFactory>();
             container.Register<IHttpClientFactory, HttpClientFactory>();
 
-
-            #endregion
+            
         }
         public async Task<FullContactPerson> LookupPersonByEmailAsync(string email)
         {
-
-            
             FullContactPerson p = new FullContactPerson();
             try
             {
@@ -60,9 +58,9 @@ namespace FullContact
 
                 ///Create full contact app service  
                 var fullContactAppService = fullContactAppServiceFactory.Create<Person>("https://api.fullcontact.com/v2", "dae0fac8e1ede966", Serializer.Json);
-
+                
                 /// Call full contact api by get 
-                var person = await fullContactAppService.GetAsync(Lookup.Email, email);
+                person = await fullContactAppService.GetAsync(Lookup.Email, email);
                 //        person.Status
                 //person.ContactInfo.WebSites
 
@@ -93,9 +91,9 @@ namespace FullContact
                     p.State= person.Demographics.locationDeduced.State.Name;
                 
                 p.NormalizedLocation=person.Demographics.locationDeduced.NormalizedLocation;
-                
-                
-                System.Console.Write(fullContactAppService.ResponseSerializer.Serialize(person).Result);
+
+
+                latestResult = fullContactAppService.ResponseSerializer.Serialize(person).Result;
 
                 return p;
             }
@@ -110,6 +108,10 @@ namespace FullContact
             //    await Task.Delay(5000);
 
             return null;
+        }
+        public void printLatestPersonInfo()
+        {
+            System.Console.Write(latestResult);
         }
     }
 
