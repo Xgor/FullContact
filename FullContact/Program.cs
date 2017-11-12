@@ -19,29 +19,29 @@ namespace FullContact
 
         static async Task MainAsync(string[] args)
         {
+            string choice = "y";
+            while (choice[0] == 'y')
+            {
+                Console.Write("Enter E-mail: ");
 
-            Console.Write("Enter E-mail: ");
-            
-            string email = Console.ReadLine();
-            FullContactSearch search = new FullContactSearch();
+                string email = Console.ReadLine();
+                FullContactApi search = new FullContactApi();
 
-            Task<FullContactPerson> task = search.LookupPersonByEmailAsync(email);
-            Console.Write("Loading email");
+                Task<FullContactPerson> task = search.LookupPersonByEmailAsync(email);
+                Console.Write("Loading email");
 
-            Timer timer = new Timer(100);
-            timer.Elapsed += async (sender, e) => await AddLoadingDot();
-            timer.Start();
-
-
-            FullContactPerson p = await task;
-            timer.Stop();
-            Console.WriteLine("\nMail Loaded!");
+                Timer timer = new Timer(100);
+                timer.Elapsed += async (sender, e) => await AddLoadingDot();
+                timer.Start();
 
 
-            Console.WriteLine("Name: " + p.fullName);
-            Console.WriteLine("Gender: "+p.gender);
+                FullContactPerson p = await task;
+                timer.Stop();
+                Console.WriteLine("\nMail Loaded!");
 
-            Console.ReadLine();
+                Console.WriteLine("Want to continue (y/n)");
+                choice = Console.ReadLine();
+            }
         }
         
 

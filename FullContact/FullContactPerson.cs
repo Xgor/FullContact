@@ -32,24 +32,29 @@ namespace FullContact
         public string Organizations;
     }
 
-    public class FullContactSearch : IFullContactApi
+    public class FullContactApi : IFullContactApi
     {
-        
+        Container container;
+
+        public FullContactApi()
+        {
+            container = new Container();
+            #region Dependency Injection (DI) using Simple Injector
+
+            container.RegisterSingleton<IServiceProvider>(container);
+            container.Register<IFullContactAppServiceFactory, FullContactAppServiceFactory>();
+            container.Register<IHttpClientFactory, HttpClientFactory>();
+
+
+            #endregion
+        }
         public async Task<FullContactPerson> LookupPersonByEmailAsync(string email)
         {
 
-            Container container = new Container();
+            
             FullContactPerson p = new FullContactPerson();
             try
             {
-                #region Dependency Injection (DI) using Simple Injector
-
-                container.RegisterSingleton<IServiceProvider>(container);
-                container.Register<IFullContactAppServiceFactory, FullContactAppServiceFactory>();
-                container.Register<IHttpClientFactory, HttpClientFactory>();
-
-                #endregion
-                
                 ///Get container full contact app service factory  
                 var fullContactAppServiceFactory = container.GetInstance<IFullContactAppServiceFactory>();
 
@@ -59,7 +64,7 @@ namespace FullContact
                 /// Call full contact api by get 
                 var person = await fullContactAppService.GetAsync(Lookup.Email, email);
                 //        person.Status
-                
+                //person.ContactInfo.WebSites
 
                 p.familyName = person.ContactInfo.FamilyName;
                 p.givenName = person.ContactInfo.GivenName;
@@ -90,7 +95,7 @@ namespace FullContact
                 p.NormalizedLocation=person.Demographics.locationDeduced.NormalizedLocation;
                 
                 
-        //        System.Console.Write(fullContactAppService.ResponseSerializer.Serialize(person).Result);
+                System.Console.Write(fullContactAppService.ResponseSerializer.Serialize(person).Result);
 
                 return p;
             }
